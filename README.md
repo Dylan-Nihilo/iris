@@ -14,9 +14,12 @@ hand: backdrop, smooth pointer, automatic zoom, captions. It works when nobody t
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-![The demo window operating itself, recorded and rendered by iris](docs/demo.gif)
+![One Playwright run on Wikipedia: the plain recording on the left, the iris render of it on the right](docs/compare.gif)
 
-<sub>Recorded and rendered by iris with nobody at the keyboard: <code>Scripts/demo.sh</code></sub>
+<sub>One Playwright run, recorded once, behind other windows. Left: the recording with nothing
+added. Right: what iris renders from it. Nobody touched the mouse.<br>
+Pages from Wikipedia ("Screencast", "Iris (anatomy)"), CC BY-SA 4.0; eye photograph by
+Rapidreflex, CC BY-SA 4.0.</sub>
 
 </div>
 
@@ -55,12 +58,30 @@ pointer is used, by a person or by computer use, iris sees it and needs no decla
 
 ## Install
 
-Requires macOS 14 or later and Swift 6.1 or later (Xcode 16.4 or later) to build.
+Requires macOS 14 or later. With Homebrew:
+
+    brew install Dylan-Nihilo/tap/iris
+
+The full name matters: plain `iris` is another program in Homebrew. Or take the binary of the
+[latest release](https://github.com/Dylan-Nihilo/iris/releases/latest), which runs on Apple
+silicon and Intel:
+
+    mkdir -p ~/.local/bin
+    curl -L https://github.com/Dylan-Nihilo/iris/releases/latest/download/iris-macos-universal.tar.gz \
+      | tar -xz -C ~/.local/bin iris
+
+Or build it, with Swift 6.1 or later (Xcode 16.4 or later):
 
     git clone https://github.com/Dylan-Nihilo/iris.git && cd iris
     Scripts/install.sh                 # builds and installs ~/.local/bin/iris
-    Scripts/install.sh --claude-skill  # also links the recording skill for Claude Code
-    Scripts/install.sh --codex-skill   # also links it for Codex
+
+The release binary is not notarised. Installed by Homebrew or `curl` it runs as it is; a copy
+downloaded with a browser needs `xattr -d com.apple.quarantine iris` once.
+
+Then teach your coding agent to record:
+
+    iris skill --claude                # writes ~/.claude/skills/iris-recording/SKILL.md
+    iris skill --codex                 # the same for Codex
 
 The application that launches `iris` (your terminal, or the agent's desktop app) needs the
 **Screen & System Audio Recording** permission in System Settings. Posting real mouse or
@@ -70,12 +91,14 @@ keyboard events, as computer use does, needs **Accessibility** as well. Then:
 
 ## Quick start
 
-See it work before you write anything:
+See it work before you write anything. In a clone of the repository,
 
     Scripts/demo.sh
 
 opens a small window that operates itself, declares each of its actions the way an agent
 would, and writes `samples/demo/demo.mp4` and `demo.gif`. The window never takes the keyboard.
+
+![The demo window operating itself, recorded and rendered by iris](docs/demo.gif)
 
 Record something of your own:
 
@@ -96,8 +119,9 @@ given. `iris help` lists every option; `iris guide` is the complete how-to that 
 
 ## Using it from an agent
 
-The skill in [`skills/iris-recording`](skills/iris-recording/SKILL.md) is the output of
-`iris guide`. With it linked, an agent asked to "record a video of X" knows the workflow.
+The skill in [`skills/iris-recording`](skills/iris-recording/SKILL.md) is what `iris skill`
+writes: the text of `iris guide` under a header that says when to load it. With it installed,
+an agent asked to "record a video of X" knows the workflow.
 
 | The agent acts through | What iris goes by |
 | --- | --- |
@@ -166,7 +190,8 @@ Backdrops: `aurora`, `ocean`, `sunset`, `meadow`, `graphite`, `paper`, `midnight
 | `iris render` | Composes the video from a session |
 | `iris plan` · `iris frames` · `iris sheet` | Ways to look at a render before, and after |
 | `iris status` · `iris doctor` | The current recording; whether this machine can record |
-| `iris guide` · `iris help` | The how-to agents read; every option |
+| `iris guide` · `iris skill` | The how-to agents read; the same as a skill for Claude Code or Codex |
+| `iris help` · `iris version` | Every option; the version |
 
 ## How it works
 
@@ -219,7 +244,7 @@ exercise so far: `--whole-screen`, real keystrokes typed by an agent, and `--foc
 
 ## Roadmap
 
-- Prebuilt binaries and a Homebrew formula
+- A signed and notarised release binary
 - Audio: narration track, system sound
 - Editing a finished plan by hand (move a zoom, retime a caption) without marks
 - Portrait and square layouts for social clips

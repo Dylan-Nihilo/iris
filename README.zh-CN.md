@@ -14,9 +14,12 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-![演示窗口自己操作自己，由 iris 录制并渲染](docs/demo.gif)
+![同一次 Playwright 运行：左边是原样的录制，右边是 iris 渲染的成片](docs/compare.gif)
 
-<sub>全程无人操作，由 iris 自己录制并渲染：<code>Scripts/demo.sh</code></sub>
+<sub>同一次 Playwright 运行，只录了一遍，窗口在其他窗口后面。左：什么都不加的录制。
+右：iris 用它渲染出的成片。全程没有人碰鼠标。<br>
+页面来自 Wikipedia（"Screencast"、"Iris (anatomy)"），CC BY-SA 4.0；眼睛照片作者 Rapidreflex，
+CC BY-SA 4.0。</sub>
 
 </div>
 
@@ -49,12 +52,30 @@ Iris 走另一条路。agent 在动手之前先说一声要在哪里操作：
 
 ## 安装
 
-需要 macOS 14 或更高版本；构建需要 Swift 6.1 或更高（Xcode 16.4 或更高）。
+需要 macOS 14 或更高版本。用 Homebrew：
+
+    brew install Dylan-Nihilo/tap/iris
+
+要写全名：Homebrew 里单独的 `iris` 是另一个软件。或者直接取
+[最新 release](https://github.com/Dylan-Nihilo/iris/releases/latest) 的二进制，Apple 芯片和
+Intel 都能运行：
+
+    mkdir -p ~/.local/bin
+    curl -L https://github.com/Dylan-Nihilo/iris/releases/latest/download/iris-macos-universal.tar.gz \
+      | tar -xz -C ~/.local/bin iris
+
+或者自己构建，需要 Swift 6.1 或更高（Xcode 16.4 或更高）：
 
     git clone https://github.com/Dylan-Nihilo/iris.git && cd iris
     Scripts/install.sh                 # 构建并安装到 ~/.local/bin/iris
-    Scripts/install.sh --claude-skill  # 同时为 Claude Code 链接录制 skill
-    Scripts/install.sh --codex-skill   # 同时为 Codex 链接
+
+release 的二进制没有经过公证。通过 Homebrew 或 `curl` 安装的可以直接运行；用浏览器下载的
+需要先执行一次 `xattr -d com.apple.quarantine iris`。
+
+然后让你的编码 agent 学会录屏：
+
+    iris skill --claude                # 写入 ~/.claude/skills/iris-recording/SKILL.md
+    iris skill --codex                 # Codex 同理
 
 启动 `iris` 的应用（你的终端，或 agent 的桌面应用）需要在系统设置中获得**录屏与系统录音**权限。
 像 computer use 那样发送真实的鼠标键盘事件，还需要**辅助功能**权限。然后：
@@ -63,12 +84,14 @@ Iris 走另一条路。agent 在动手之前先说一声要在哪里操作：
 
 ## 快速开始
 
-先看它跑起来：
+先看它跑起来。在仓库的克隆里执行
 
     Scripts/demo.sh
 
 会打开一个自己操作自己的小窗口，像 agent 一样声明每一个动作，然后写出 `samples/demo/demo.mp4`
 和 `demo.gif`。这个窗口不会抢走键盘焦点。
+
+![演示窗口自己操作自己，由 iris 录制并渲染](docs/demo.gif)
 
 录你自己的东西：
 
@@ -89,8 +112,9 @@ Iris 走另一条路。agent 在动手之前先说一声要在哪里操作：
 
 ## 让 agent 使用
 
-[`skills/iris-recording`](skills/iris-recording/SKILL.md) 里的 skill 就是 `iris guide` 的输出。
-链接之后，agent 被要求“录一段 X 的视频”时就知道该怎么做。
+[`skills/iris-recording`](skills/iris-recording/SKILL.md) 里的 skill 就是 `iris skill` 写出的
+文件：`iris guide` 的全文，加上一段说明何时加载它的文件头。安装之后，agent 被要求
+“录一段 X 的视频”时就知道该怎么做。
 
 | agent 的操作方式 | iris 依据什么 |
 | --- | --- |
@@ -155,7 +179,8 @@ await page.click('#send');
 | `iris render` | 从 session 合成视频 |
 | `iris plan` · `iris frames` · `iris sheet` | 渲染前后的各种检查方式 |
 | `iris status` · `iris doctor` | 当前录制状态；这台电脑能否录制 |
-| `iris guide` · `iris help` | 给 agent 的指南；全部选项 |
+| `iris guide` · `iris skill` | 给 agent 的指南；把它装成 Claude Code 或 Codex 的 skill |
+| `iris help` · `iris version` | 全部选项；版本号 |
 
 ## 工作原理
 
@@ -202,7 +227,7 @@ agent 输入的真实按键、`--focus visual`。欢迎[反馈](https://github.c
 
 ## 路线图
 
-- 预编译二进制与 Homebrew formula
+- 经过签名和公证的 release 二进制
 - 音频：旁白音轨、系统声音
 - 手工编辑已生成的 plan（移动一次缩放、调整字幕时间），不必通过 mark
 - 适合社交平台的竖版和方形布局

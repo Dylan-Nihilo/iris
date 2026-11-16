@@ -10,6 +10,7 @@ actions. `README.md` says what it is for; `iris guide` says how it is used.
     swift test                         # unit tests; no screen access needed
     Scripts/demo.sh [dir]              # end-to-end: records the self-operating demo window and renders it
     Scripts/install.sh --skill-file    # rewrite skills/iris-recording/SKILL.md from the guide
+    Scripts/package.sh [dir]           # the release archive: universal binary and its checksum
 
 `Scripts/demo.sh` needs the Screen Recording permission for the launching application. Its
 window opens behind the others and never takes the keyboard. `IRIS_DEMO_REAL=1` moves the
@@ -43,11 +44,16 @@ real pointer for about twenty seconds: use it only when nobody is working on the
   and must stay out of the zoom plan and the pointer track.
 - Times are seconds of recording time (pauses left out) until `TimeMap` turns them into
   video time; positions are 0 to 1 across the recorded picture, origin top left.
-- The guide (`Support/Guide.swift`) is the single source of the skill file. After editing it,
-  run `Scripts/install.sh --skill-file`; `GuideTests` fails when the two differ.
+- The guide (`Support/Guide.swift`) is the single source of the skill file: `iris skill`
+  writes `Guide.skill`, the guide under its header. After editing either, run
+  `Scripts/install.sh --skill-file`; `GuideTests` fails when the file and the binary differ.
 - After a change to rendering, render a recording and look at it (`iris sheet`, `iris frames`).
   A passing test does not say the video looks right.
 - Recordings under `samples/` are not committed; they may show whatever was on the screen.
 - The version is `Iris.version` (`Support/Version.swift`); a release is a tag `v<version>`.
+  Pushing the tag runs `.github/workflows/release.yml`, which tests, packages and publishes
+  the release with the `CHANGELOG.md` section of that version as its notes, so write that
+  section first. The Homebrew formula lives in `Dylan-Nihilo/homebrew-tap` and is bumped by
+  hand: new `version`, and the `sha256` from the release's `.sha256` file.
 - CI (`.github/workflows/ci.yml`) builds and runs the unit tests on macOS. It cannot record,
   so `Scripts/demo.sh` stays a check to run by hand.
