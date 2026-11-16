@@ -48,6 +48,9 @@ Producing the video
       --count 12   --columns 4   --tile-width 480   --out FILE
 
   iris guide                         how an agent records with iris, step by step
+  iris skill [--claude] [--codex] [--dir DIR]
+                                     install that guide as a skill for Claude Code, for Codex, or
+                                     under DIR; with no option, print the skill file
   iris doctor                        whether this machine can record: permissions, ffmpeg, a running recording
   iris version
 
@@ -76,6 +79,7 @@ func run() async -> Int32 {
         case "frames": try await framesCommand(arguments)
         case "sheet": try await sheetCommand(arguments)
         case "guide": print(Guide.text)
+        case "skill": try skillCommand(arguments)
         case "doctor": try doctorCommand(arguments)
         case "version", "--version", "-v": print("iris \(Iris.version)")
         case "help", "--help", "-h": print(usage)

@@ -6,7 +6,7 @@
 #   --prefix DIR     where the binary goes (default ~/.local/bin)
 #   --claude-skill   link the recording skill into ~/.claude/skills
 #   --codex-skill    link the recording skill into ${CODEX_HOME:-~/.codex}/skills
-#   --skill-file     only rewrite skills/iris-recording/SKILL.md from `iris guide`
+#   --skill-file     only rewrite skills/iris-recording/SKILL.md from `iris skill`
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -27,9 +27,8 @@ swift build -c release --package-path "$root" >&2
 bin="$root/.build/release/iris"
 skill="$root/skills/iris-recording"
 
-# The skill is the guide the binary prints, under the header the file already has.
-header=$(sed -n '1,/^<!-- Generated/p' "$skill/SKILL.md")
-{ printf '%s\n\n' "$header"; "$bin" guide; } >"$skill/SKILL.md.new"
+# The skill file in the repository is the one the binary writes.
+"$bin" skill >"$skill/SKILL.md.new"
 mv "$skill/SKILL.md.new" "$skill/SKILL.md"
 [ -n "$only_skill" ] && exit 0
 

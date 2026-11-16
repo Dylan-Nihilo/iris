@@ -3,7 +3,7 @@ name: iris-recording
 description: "Record a polished demo video or GIF of an app window on macOS with the iris CLI: automatic zoom on each action, smooth pointer, backdrop, idle time removed. Use when asked to record, capture or film an interface you operate yourself (computer use, Playwright, CDP, accessibility), or to turn such a run into an MP4 or GIF. Works unattended and without the real mouse."
 ---
 
-<!-- Generated from Sources/IrisCore/Support/Guide.swift by Scripts/install.sh --skill-file; edit the guide there. -->
+<!-- Written by `iris skill` from the guide in Sources/IrisCore/Support/Guide.swift; edit the guide there. -->
 
 # Recording with iris
 

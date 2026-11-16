@@ -371,13 +371,13 @@ final class OverlayTests: XCTestCase {
 }
 
 final class GuideTests: XCTestCase {
-    /// The skill file agents load is the guide the binary prints; `Scripts/install.sh
+    /// The skill file in the repository is what `iris skill` writes; `Scripts/install.sh
     /// --skill-file` rewrites it after the guide changes.
     func testTheSkillFileCarriesTheGuide() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let skill = try String(contentsOf: root.appendingPathComponent("skills/iris-recording/SKILL.md"), encoding: .utf8)
-        XCTAssertTrue(skill.hasPrefix("---\nname: iris-recording\n"))
-        XCTAssertTrue(skill.trimmingCharacters(in: .whitespacesAndNewlines)
-            .hasSuffix(Guide.text.trimmingCharacters(in: .whitespacesAndNewlines)))
+        XCTAssertTrue(Guide.skill.hasPrefix("---\nname: iris-recording\n"))
+        XCTAssertTrue(Guide.skill.hasSuffix(Guide.text + "\n"))
+        XCTAssertEqual(skill, Guide.skill)
     }
 }

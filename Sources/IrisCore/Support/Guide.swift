@@ -1,5 +1,18 @@
 /// How an agent records with iris, printed by `iris guide` and shipped as the skill file.
 public enum Guide {
+    /// What tells an agent when to load the skill, and the note on where the file comes from.
+    public static let skillHeader = #"""
+---
+name: iris-recording
+description: "Record a polished demo video or GIF of an app window on macOS with the iris CLI: automatic zoom on each action, smooth pointer, backdrop, idle time removed. Use when asked to record, capture or film an interface you operate yourself (computer use, Playwright, CDP, accessibility), or to turn such a run into an MP4 or GIF. Works unattended and without the real mouse."
+---
+
+<!-- Written by `iris skill` from the guide in Sources/IrisCore/Support/Guide.swift; edit the guide there. -->
+"""#
+
+    /// The skill file as a whole: `skills/iris-recording/SKILL.md`, and what `iris skill` writes.
+    public static var skill: String { skillHeader + "\n\n" + text + "\n" }
+
     public static let text = #"""
 # Recording with iris
 
