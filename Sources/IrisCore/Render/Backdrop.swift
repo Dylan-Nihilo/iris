@@ -134,13 +134,14 @@ public enum Backdrop {
         let space = CGColorSpace(name: CGColorSpace.sRGB)!
         guard let gradient = CGGradient(colorsSpace: space, colors: colors as CFArray, locations: nil) else { return }
         let radians = angle * .pi / 180
-        let reach = (abs(cos(radians)) * bounds.width + abs(sin(radians)) * bounds.height) / 2
+        let width = Double(bounds.width), height = Double(bounds.height)
+        let reach = CGFloat((abs(cos(radians)) * width + abs(sin(radians)) * height) / 2)
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         // Runs from the top left towards the bottom right for angles between 0 and 90.
-        let direction = CGPoint(x: cos(radians), y: -sin(radians))
+        let reachX = CGFloat(cos(radians)) * reach, reachY = CGFloat(-sin(radians)) * reach
         context.drawLinearGradient(gradient,
-                                   start: CGPoint(x: center.x - direction.x * reach, y: center.y - direction.y * reach),
-                                   end: CGPoint(x: center.x + direction.x * reach, y: center.y + direction.y * reach),
+                                   start: CGPoint(x: center.x - reachX, y: center.y - reachY),
+                                   end: CGPoint(x: center.x + reachX, y: center.y + reachY),
                                    options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
     }
 

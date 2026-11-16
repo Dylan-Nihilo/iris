@@ -49,7 +49,7 @@ Iris 走另一条路。agent 在动手之前先说一声要在哪里操作：
 
 ## 安装
 
-需要 macOS 14 或更高版本，以及 Swift 工具链（Xcode 15 或更高）。
+需要 macOS 14 或更高版本；构建需要 Swift 6.1 或更高（Xcode 16.4 或更高）。
 
     git clone https://github.com/Dylan-Nihilo/iris.git && cd iris
     Scripts/install.sh                 # 构建并安装到 ~/.local/bin/iris

@@ -55,7 +55,7 @@ pointer is used, by a person or by computer use, iris sees it and needs no decla
 
 ## Install
 
-Requires macOS 14 or later and a Swift toolchain (Xcode 15 or later).
+Requires macOS 14 or later and Swift 6.1 or later (Xcode 16.4 or later) to build.
 
     git clone https://github.com/Dylan-Nihilo/iris.git && cd iris
     Scripts/install.sh                 # builds and installs ~/.local/bin/iris
