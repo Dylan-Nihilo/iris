@@ -1,0 +1,45 @@
+name: Release
+
+# A tag v<version> publishes a release with the prebuilt binary. Running it by hand for an
+# existing tag does the same with the workflow as it is on the branch it is run from.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag to build and publish, such as v0.1.0
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-15
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+      - name: The tag is the version in the source
+        run: |
+          version=$(sed -n 's/.*static let version = "\(.*\)"/\1/p' Sources/IrisCore/Support/Version.swift)
+          [ "v$version" = "$TAG" ] || { echo "the tag is $TAG, the source says $version" >&2; exit 1; }
+      - name: Test
+        run: swift test
+      - name: Build and package
+        run: Scripts/package.sh dist
+      - name: Notes
+        run: |
+          awk -v v="${TAG#v}" '/^## /{on = ($2 == v)} on && !/^## /' CHANGELOG.md >notes.md
+          [ -s notes.md ] || { echo "CHANGELOG.md has no section for ${TAG#v}" >&2; exit 1; }
+          cat notes.md
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" --verify-tag --title "Iris ${TAG#v}" --notes-file notes.md \
+            dist/iris-macos-universal.tar.gz dist/iris-macos-universal.tar.gz.sha256
