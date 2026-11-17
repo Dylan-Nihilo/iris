@@ -54,6 +54,8 @@ real pointer for about twenty seconds: use it only when nobody is working on the
   Pushing the tag runs `.github/workflows/release.yml`, which tests, packages and publishes
   the release with the `CHANGELOG.md` section of that version as its notes, so write that
   section first. The Homebrew formula lives in `Dylan-Nihilo/homebrew-tap` and is bumped by
-  hand: new `version`, and the `sha256` from the release's `.sha256` file.
+  hand: the new `url`, the `sha256` from the release's `.sha256` file, and a new bottle.
+  That repository's README has the steps; a formula without a bottle fails to install on
+  machines with outdated Command Line Tools.
 - CI (`.github/workflows/ci.yml`) builds and runs the unit tests on macOS. It cannot record,
   so `Scripts/demo.sh` stays a check to run by hand.
